@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const logger = require('./src/utils/logger');
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, ()=> {
     console.log(`server listening on port: ${PORT}`)
@@ -7,6 +9,7 @@ app.listen(PORT, ()=> {
 
 
 //routes
-app.get('/', (req, res) => res.send("API is running."))
+const userRoutes = require('./src/routes/user-routes');
+userRoutes(app, logger);
 
 

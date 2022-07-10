@@ -17,7 +17,16 @@
     "express-validator": "^6.14.2",
     "gravator": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.4.4"
+    "mongoose": "^6.4.4",
+    "dotenv": "^10.0.0",
+    "express-winston": "^3.1.0",
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0",
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3",
+    "convict": "^6.0.1",
+    "convict-format-with-validator": "^6.0.1",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "concurrently": "^7.2.2",
