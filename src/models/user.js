@@ -1,8 +1,8 @@
-import { Schema as _Schema, Types, model } from 'mongoose';
-const Schema = _Schema;
+const  mongoose  = require('mongoose');
+const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    _id: Types.ObjectId,
+    _id: mongoose.Types.ObjectId,
     name : {
         type: String,
         required: true
@@ -10,7 +10,7 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true   
     },
     avatar: {
         type: String
@@ -28,4 +28,4 @@ const userSchema = new Schema({
     }
 });
 
-export default model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);
