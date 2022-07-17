@@ -1,10 +1,11 @@
 const logger = require('../../utils/logger');
-const getUsersJSON = require('../../../users.json');
 const ApiHandler = require('../../common/api-handler');
+const UserRepository = require('../../repositories/user-repository');
 
 class UserHandlers extends ApiHandler {
   constructor(logger) {
     super(logger);
+    this.userRepository = new UserRepository(logger);
     this.getUsers = this.getUsers.bind(this);
   }
 
@@ -18,7 +19,7 @@ class UserHandlers extends ApiHandler {
       } = req.query;
       let filter = {};
       logger.info(`accessing to user data source repository`);
-      let result = await getUsersJSON;
+      let result = await this.userRepository.paged(filter, page, perPage)
       res.status(200);
       res.json({
         data: result,
