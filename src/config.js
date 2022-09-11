@@ -36,7 +36,7 @@ let config = convict({
 		name: {
 			doc: 'database name',
 			format: '*',
-			default: 'SchoolDB'
+			default: 'Chit-Chit-Cluster'
 		},
 		uri: {
 			doc: 'database uri',
@@ -47,13 +47,13 @@ let config = convict({
 		username: {
 			doc: 'username for database',
 			format: '*',
-			default: 'kamal-prakash',
+			default: 'klamgade',
 			env: 'DB_USER'
 		},
 		pass: {
 			doc: 'password for database',
 			format: '*',
-			default: 'test123',
+			default: 'Auckland021',
 			env: 'DB_PASS'
 		},
 		opts: {
