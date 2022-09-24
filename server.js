@@ -8,6 +8,9 @@ app.use(express.json());
 
 //routes
 const userRoutes = require('./src/routes/user-routes');
+const connectDB = require('./config/db');
+//connect database
+connectDB();
 userRoutes(app, logger);
 
 const PORT = process.env.PORT || 3000;
