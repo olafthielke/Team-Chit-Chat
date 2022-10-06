@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 const config = require('config');
 const db = config.get('mongoURI');
+const logger = require('../utils/logger');
 
 const connectDB = async () => {
     try {
-         mongoose.connect(db, { useNewUrlParser: true });
-         console.log("MongoDB Connnected...", db);
+        console.log("start db connection...", db)
+        mongoose.connect(db, { useNewUrlParser: true});
+        logger.info("MongoDB Connnected...");
     } catch (err) {
-        console.error(err.message);
+        logger.info(err.message);
         //exit process with failure
         process.exit(1);
     }
