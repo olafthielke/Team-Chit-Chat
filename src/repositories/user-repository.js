@@ -1,11 +1,12 @@
-const logger = require('../utils/logger');
-const User = require('../models/user'); 
+const logger = require("../utils/logger");
+const User = require("../models/user");
 
 class UserRepository {
   constructor(logger) {
     this.log = logger;
     this.paged = this.paged.bind(this);
     this.create = this.create.bind(this);
+    this.getUser = this.getUser.bind(this);
   }
 
   async paged(filter, sortBy, page = 0, perPage = 50) {
@@ -21,12 +22,16 @@ class UserRepository {
     }
     return {
       total: count,
-      items: results
+      items: results,
     };
   }
 
   async create(doc) {
     return await User.create(doc);
+  }
+
+  async getUser(email) {
+    return await User.findOne({ email });
   }
 }
 module.exports = UserRepository;

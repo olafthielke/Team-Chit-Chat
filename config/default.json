@@ -1,3 +1,3 @@
 {
-    "mongoURI": "mongodb+srv://klamgade:Auckland021@chit-chit-cluster.z4cyi.mongodb.net/ChitChat?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv:Auckland021@chit-chit-cluster.z4cyi.mongodb.net/ChitChat?retryWrites=true&w=majority"
 }

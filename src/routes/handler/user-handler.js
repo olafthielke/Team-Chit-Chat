@@ -2,6 +2,8 @@ const logger = require('../../utils/logger');
 const ApiHandler = require('../../common/api-handler');
 const UserRepository = require('../../repositories/user-repository');
 const { validationResult } = require('express-validator');
+const gravator = require('gravator');
+const bcrypt = require('bcryptjs');
 
 
 class UserHandlers extends ApiHandler {
@@ -41,10 +43,22 @@ class UserHandlers extends ApiHandler {
     try {
       const input = req.body;
       if (input) {
+        //payload validation
         const errors = validationResult(req);
         if(!errors.isEmpty) {
           return res.status(400).json({ errors : errors.array() });
         }
+        //validate if user exists
+        const { name, email, password } = req.body;
+        let user = await this.userRepository.getUser(email);
+        if(user) { res.status(400).json({ errors : [{ msg : 'User already exists. '}]}) };
+        //get gravatar 
+       // const avatar  = gravator.url(email, { s: '200', r: 'pg', d: 'mm' });
+        //encrypt password
+        //const salt = await bcrypt.genSalt(10);
+        //user.password = await bcrypt.hash(password, salt);
+
+        //create user object
         let result = await this.userRepository.create(input);
         res.status(200);
         res.json({
