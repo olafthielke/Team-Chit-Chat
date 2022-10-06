@@ -8,7 +8,7 @@ class ApiHandler {
     handleError(err, res) {
         this.log.error(err.message, [err]);
         res.status(500);
-        res.json({ message: 'internal server error' });
+        res.json(err);
     }
 
     buildSortBy(sort, direction) {

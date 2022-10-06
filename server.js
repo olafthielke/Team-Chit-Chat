@@ -13,6 +13,9 @@ const dbPromise = require('./src/models/db')(config.get('db'));
 
 //routes
 const userRoutes = require('./src/routes/user-routes');
+const connectDB = require('./config/db');
+//connect database
+connectDB();
 userRoutes(app, logger);
 
 const PORT = process.env.PORT || 3000;
