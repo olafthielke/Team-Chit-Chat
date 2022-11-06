@@ -12,8 +12,19 @@ app.use(express.json());
 const dbPromise = require('./src/models/db')(config.get('db'));
 
 //routes
+//user
 const userRoutes = require('./src/routes/user-routes');
 userRoutes(app, logger);
+
+//profile
+const profileRoutes = require('./src/routes/profile-routes');
+profileRoutes(app, logger);
+
+//auth
+const authRoutes = require('./src/routes/auth-routes');
+app.use(authRoutes);
+authRoutes(app.request, app.response, (response) => { console.log("auth routes response", response) });
+
 
 const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);

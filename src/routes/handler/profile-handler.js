@@ -9,6 +9,7 @@ class ProfileHandlers extends ApiHandler {
     super(logger);
     this.profileRepository = new ProfileRepository(logger);
     this.getProfiles = this.getProfiles.bind(this);
+    this.getProfile = this.getProfile.bind(this);
     this.createProfile = this.createProfile.bind(this);
   }
 
