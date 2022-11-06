@@ -64,8 +64,8 @@ class UserHandlers extends ApiHandler {
         //encrypt password
         const salt = await bcrypt.genSalt(10);
         user.password = await bcrypt.hash(password, salt);
-        //await user.save();
-        await this.userRepository.create(input);
+        
+        await user.save();
 
         //jwt token
         const payload = {

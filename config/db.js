@@ -6,7 +6,7 @@ const logger = require('../src/utils/logger');
 const connectDB = async () => {
     try {
         console.log("start db connection...", db)
-        mongoose.connect(db, { useNewUrlParser: true});
+        mongoose.connect(db, { useNewUrlParser: true, useCreateIndex: true });
         logger.info("MongoDB Connnected...");
     } catch (err) {
         logger.info(err.message);
