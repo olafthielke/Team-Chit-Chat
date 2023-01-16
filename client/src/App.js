@@ -1,14 +1,19 @@
-import { Fragment } from 'react';
-import Navbar from './components/Navbar';
-import Landing from './components/Landing';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+} from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Landing from "./components/Landing";
+import "./App.css";
 
 const App = () => (
-  <Fragment>
-    <h1>App</h1>
-    <Navbar></Navbar>
-    <Landing></Landing>
-  </Fragment>
+  <Router>
+    <Navbar/>
+    <Routes>
+      <Route  path="/" element={<Landing />} />
+    </Routes>
+  </Router>
 );
 
 export default App;
