@@ -1,7 +1,30 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Link } from 'react-router-dom';
 
+
 const Register = () => {
+
+  //add useState hook to capture formData object states
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+const { name, email, password, confirmPassword } = formData;
+
+//add custom onChange and onSubmit(form submission) func
+const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value});
+
+const onSubmit = e => {
+  e.preventDefault();
+  if(password !== confirmPassword) {
+    console.log("passwords does not match.");
+  } else {
+    console.log("form data", formData);
+  }
+}
 
   return (
     <section className="container">
@@ -9,12 +32,15 @@ const Register = () => {
       <p className="lead">
         <i className="fas fa-user" /> Create Your Account
       </p>
-      <form className="form">
+      <form className="form" onSubmit={e => onSubmit(e)}>
         <div className="form-group">
           <input
             type="text"
             placeholder="Name"
             name="name"
+            value={name}
+            onChange={e => onChange(e)}
+            required
           />
         </div>
         <div className="form-group">
@@ -22,6 +48,9 @@ const Register = () => {
             type="email"
             placeholder="Email Address"
             name="email"
+            value={email}
+            onChange={e => onChange(e)}
+            required
           />
           <small className="form-text">
             This site uses Gravatar so if you want a profile image, use a
@@ -33,13 +62,19 @@ const Register = () => {
             type="password"
             placeholder="Password"
             name="password"
+            value={password}
+            onChange={e => onChange(e)}
+            required
           />
         </div>
         <div className="form-group">
           <input
             type="password"
             placeholder="Confirm Password"
-            name="password2"
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={e => onChange(e)}
+            required
           />
         </div>
         <input type="submit" className="btn btn-primary" value="Register" />
