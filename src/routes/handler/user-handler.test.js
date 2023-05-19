@@ -11,6 +11,7 @@ test("Given empty request body When call registerUser Then return 400 - Bad Requ
     verifyErrorHttpStatusCode(res, 400, "Empty request body.");
 });
 
+
 // Arrange helpers
 function setupResponse()
 {
