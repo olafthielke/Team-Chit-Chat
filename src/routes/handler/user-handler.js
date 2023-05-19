@@ -85,6 +85,9 @@ class UserHandlers extends ApiHandler {
           }
         );
       }
+      else {
+        res.status(400).json({ errors: [{ msg: "Empty request body." }] });
+      }
     } catch (err) {
       this.handleError(err, res);
     }
