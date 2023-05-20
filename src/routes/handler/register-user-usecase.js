@@ -1,6 +1,10 @@
+const MissingUser = require("./errors");
 
 class RegisterUserUseCase {
-    async registerUser() { }
+    registerUser(user) {
+        if (!user)
+            throw new MissingUser();
+    }
 }
   
 module.exports = RegisterUserUseCase;
