@@ -7,10 +7,13 @@ const gravator = require("gravator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const RegisterUserUseCase = require("./register-user-usecase");
+const MissingUser = require("./errors");
 
 class UserHandlers extends ApiHandler {
-  constructor(logger) {
+  constructor(registerUseCase, logger) {
     super(logger);
+    this.registerUseCase = registerUseCase;
     this.userRepository = new UserRepository(logger);
     this.getUsers = this.getUsers.bind(this);
     this.registerUser = this.registerUser.bind(this);
@@ -43,10 +46,8 @@ class UserHandlers extends ApiHandler {
 
   async registerUser(req, res) {
     try {
-      if (!req.body) {
-        res.status(400).json({ errors: [{ msg: "Empty request body." }] });
-        return;
-      }
+
+      this.registerUseCase.registerUser(req.body);
 
       //payload validation
       const errors = validationResult(req);
@@ -88,6 +89,10 @@ class UserHandlers extends ApiHandler {
         }
       );
     } catch (err) {
+      if (err instanceof MissingUser) {
+        res.status(400).json({ errors: [{ msg: err.message }] });
+        return;
+      }
       this.handleError(err, res);
     }
   }

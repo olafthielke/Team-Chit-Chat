@@ -1,14 +1,16 @@
+const RegisterUserUseCase = require("./register-user-usecase");
 const UserHandler = require("./user-handler");
 
 test("Can construct UserHandler", () => {
     const handler = new UserHandler();
 });
 
-test("Given empty request body When call registerUser Then return 400 - Bad Request", async () => {
-    const handler = new UserHandler();
+test("Given no user data When call registerUser Then return 400 - Bad Request", async () => {
+    const useCase = new RegisterUserUseCase();
+    const handler = new UserHandler(useCase);
     const res = setupResponse();
     await handler.registerUser({ }, res);
-    verifyErrorHttpStatusCode(res, 400, "Empty request body.");
+    verifyErrorHttpStatusCode(res, 400, "Missing user data.");
 });
 
 
