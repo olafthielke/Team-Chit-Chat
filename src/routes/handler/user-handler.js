@@ -8,7 +8,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const RegisterUserUseCase = require("./register-user-usecase");
-const MissingUser = require("./errors");
+const Errors = require("./errors");
 
 class UserHandlers extends ApiHandler {
   constructor(registerUseCase, logger) {
@@ -47,18 +47,13 @@ class UserHandlers extends ApiHandler {
   async registerUser(req, res) {
     try {
 
-      this.registerUseCase.registerUser(req.body);
+      await this.registerUseCase.registerUser(req.body, validationResult(req));
 
-      //payload validation
-      const errors = validationResult(req);
-      if (!errors.isEmpty) {
-        return res.status(400).json({ errors: errors.array() });
-      }
       //validate if user exists
       const { name, email, password, avatar } = req.body;
       let user = await this.userRepository.getUser(email);
       if (user) {
-        res.status(400).json({ errors: [{ msg: "User already exists. " }] });
+        res.status(400).json({ errors: [{ msg: "User already exists." }] });
       }
 
       //TODO: get gravatar
@@ -89,8 +84,12 @@ class UserHandlers extends ApiHandler {
         }
       );
     } catch (err) {
-      if (err instanceof MissingUser) {
+      if (err instanceof Errors.MissingUser) {
         res.status(400).json({ errors: [{ msg: err.message }] });
+        return;
+      }
+      if (err instanceof Errors.ValidationError) {
+        res.status(400).json({ errors: err.errors });
         return;
       }
       this.handleError(err, res);

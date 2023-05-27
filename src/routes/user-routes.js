@@ -2,9 +2,11 @@ const API_ROOT = '/users';
 const UserHandlers = require('../routes/handler/user-handler');
 const logger = require('../utils/logger');
 const { check } = require('express-validator');
+const RegisterUserUseCase = require("../routes/handler/register-user-usecase");
 
 module.exports = (app, log) => {
-    const handlers = new UserHandlers(log);
+    const registerUseCase = new RegisterUserUseCase();
+    const handlers = new UserHandlers(registerUseCase, log);
     logger.info(`navigating to user routes`);
     //integrate and add swagger docs
     app.get(`${API_ROOT}`, handlers.getUsers);

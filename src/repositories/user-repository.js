@@ -34,4 +34,5 @@ class UserRepository {
     return await User.findOne({ email });
   }
 }
+
 module.exports = UserRepository;

@@ -1,11 +1,23 @@
-const MissingUser = require("./errors");
+const Errors = require("./errors");
 
 class RegisterUserUseCase {
-    registerUser(user) {
+
+    constructor(userRepo, logger) {
+        this.userRepository = userRepo;
+        this.logger = logger;
+    }
+    
+
+    async registerUser(user, errors) {
         if (!user)
-            throw new MissingUser();
+            throw new Errors.MissingUser();
+        if (!errors.isEmpty())
+            throw new Errors.ValidationError(errors.array());
+
+        
+        // register user
     }
 }
-  
+
 module.exports = RegisterUserUseCase;
   

@@ -5,4 +5,15 @@ class MissingUser extends Error {
     }
 }
 
-module.exports = MissingUser;
+class ValidationError extends Error {
+    constructor(errors) {
+        super();
+        this.errors = errors;
+        this.name = "ValidationError";
+    }
+}
+
+module.exports = { 
+    MissingUser : MissingUser, 
+    ValidationError : ValidationError 
+};
