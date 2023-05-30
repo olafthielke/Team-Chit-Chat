@@ -1,6 +1,7 @@
 const RegisterUserUseCase = require("./register-user-usecase");
 const UserHandler = require("./user-handler");
-const mockUserRepo = require("../../repositories/user-repository");
+const UserRepository = require("../../repositories/user-repository");
+jest.mock("../../repositories/user-repository");
 
 test("Can construct UserHandler", () => {
     const handler = new UserHandler();
@@ -26,19 +27,17 @@ test("Given no user data When call registerUser Then return 400 - Bad Request", 
 
 
 test("Given duplicate user When call registerUser Then return 400 - Bad Request", async () => {
-    jest.mock("../../repositories/user-repository", () => ({ ...jest.requireActual('../../repositories/user-repository'), getUser: jest.fn() }));
-    mockUserRepo.getUser.mockResolvedValue(null);
-    await asyncMock();
-    // mockUserRepo.getUser.mockImplementation(() => Promise.resolve(null));
-    const useCase = new RegisterUserUseCase(mockUserRepo, null);
-    const handler = new UserHandler(useCase);
+    const mockUserRepo = new UserRepository();
+    const fred = { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" };
+    mockUserRepo.getUser.mockResolvedValue(fred);   // set up getUser() to return fred
+    const useCase = new RegisterUserUseCase();
+    const handler = new UserHandler(useCase, null);
     const res = setupResponse();
-    const req = { "body": { "name": "Fred Flintstone", "email": "fred@flintstones.net", "password": "password1" } };
+    const req = { body: { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" } };
     await handler.registerUser(req, res);
-    mockUserRepo.getUser().toHaveBeenCalled();
-
-    // verifyErrorHttpStatusCode(res, 400, "User already exists.");
+    verifyErrorHttpStatusCode(res, 400, "User already exists.");
 });
+
 
 // Arrange helpers
 function setupResponse()

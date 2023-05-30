@@ -1,12 +1,6 @@
 const Errors = require("./errors");
 
-class RegisterUserUseCase {
-
-    constructor(userRepo, logger) {
-        this.userRepository = userRepo;
-        this.logger = logger;
-    }
-    
+class RegisterUserUseCase {    
 
     async registerUser(user, errors) {
         if (!user)
@@ -14,8 +8,10 @@ class RegisterUserUseCase {
         if (!errors.isEmpty())
             throw new Errors.ValidationError(errors.array());
 
-        
-        // register user
+            
+        // TODO: Check for duplicate user
+
+        // TODO Save user
     }
 }
 
