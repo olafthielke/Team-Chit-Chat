@@ -1,20 +1,18 @@
 const logger = require("../../utils/logger");
 const ApiHandler = require("../../common/api-handler");
-const UserRepository = require("../../repositories/user-repository");
 const User = require("../../models/user");
 const { validationResult } = require("express-validator");
 const gravator = require("gravator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
-const RegisterUserUseCase = require("./register-user-usecase");
 const Errors = require("./errors");
 
 class UserHandlers extends ApiHandler {
-  constructor(registerUseCase, logger) {
+  constructor(registerUseCase, userRepository, logger) {
     super(logger);
     this.registerUseCase = registerUseCase;
-    this.userRepository = new UserRepository(logger);
+    this.userRepository = userRepository;
     this.getUsers = this.getUsers.bind(this);
     this.registerUser = this.registerUser.bind(this);
   }
@@ -49,12 +47,6 @@ class UserHandlers extends ApiHandler {
 
       await this.registerUseCase.registerUser(req.body, validationResult(req));
 
-      //validate if user exists
-      const { name, email, password, avatar } = req.body;
-      let user = await this.userRepository.getUser(email);
-      if (user) {
-        res.status(400).json({ errors: [{ msg: "User already exists." }] });
-      }
 
       //TODO: get gravatar
       //const avatar = gravator.url(email, { s: "200", r: "pg", d: "mm" });
@@ -90,6 +82,10 @@ class UserHandlers extends ApiHandler {
       }
       if (err instanceof Errors.ValidationError) {
         res.status(400).json({ errors: err.errors });
+        return;
+      }
+      if (err instanceof Errors.UserAlreadyExists) {
+        res.status(400).json({ errors: [{ msg: err.message }] });
         return;
       }
       this.handleError(err, res);

@@ -13,7 +13,16 @@ class ValidationError extends Error {
     }
 }
 
+class UserAlreadyExists extends Error {
+    constructor(email) {
+        super("User already exists.");
+        this.email = email;
+        this.name = "UserAlreadyExists";
+    }
+}
+
 module.exports = { 
     MissingUser : MissingUser, 
-    ValidationError : ValidationError 
+    ValidationError : ValidationError,
+    UserAlreadyExists : UserAlreadyExists
 };

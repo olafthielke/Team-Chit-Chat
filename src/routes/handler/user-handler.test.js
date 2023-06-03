@@ -30,10 +30,10 @@ test("Given duplicate user When call registerUser Then return 400 - Bad Request"
     const mockUserRepo = new UserRepository();
     const fred = { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" };
     mockUserRepo.getUser.mockResolvedValue(fred);   // set up getUser() to return fred
-    const useCase = new RegisterUserUseCase();
-    const handler = new UserHandler(useCase, null);
+    const useCase = new RegisterUserUseCase(mockUserRepo);
+    const handler = new UserHandler(useCase, mockUserRepo, null);
     const res = setupResponse();
-    const req = { body: { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" } };
+    const req = { body: fred };
     await handler.registerUser(req, res);
     verifyErrorHttpStatusCode(res, 400, "User already exists.");
 });
