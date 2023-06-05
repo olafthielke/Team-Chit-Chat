@@ -18,6 +18,8 @@ class RegisterUserUseCase {
         if (existUser)
             throw new Errors.UserAlreadyExists(email);
             
+        // TODO Encrypt password, get avatar
+        
         // TODO Save user
     }
 }

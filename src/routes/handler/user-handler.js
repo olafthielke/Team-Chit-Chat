@@ -47,6 +47,7 @@ class UserHandlers extends ApiHandler {
 
       await this.registerUseCase.registerUser(req.body, validationResult(req));
 
+      const { name, email, password, avatar } = req.body;
 
       //TODO: get gravatar
       //const avatar = gravator.url(email, { s: "200", r: "pg", d: "mm" });
