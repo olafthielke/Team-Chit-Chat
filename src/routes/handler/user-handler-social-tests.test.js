@@ -1,17 +1,12 @@
-const UserHandler = require("./user-handler");
-const Errors = require("./errors");
 const RegisterUserUseCase = require("./register-user-usecase");
-jest.mock("./register-user-usecase");
+const UserHandler = require("./user-handler");
+const UserRepository = require("../../repositories/user-repository");
+jest.mock("../../repositories/user-repository");
 
 
-test("Can construct UserHandler", () => {
-    const handler = new UserHandler();
-});
-
-test("Given use case throws MissingUser error When call registerUser Then return 400 - Bad Request", async () => {
-    const mockUseCase = new RegisterUserUseCase();
-    mockUseCase.registerUser.mockRejectedValue(new Errors.MissingUser());
-    const handler = new UserHandler(mockUseCase, null, null);
+test("Given no user data When call registerUser Then return 400 - Bad Request", async () => {
+    const useCase = new RegisterUserUseCase();
+    const handler = new UserHandler(useCase);
     const res = setupResponse();
     await handler.registerUser({ }, res);
     verifyErrorHttpStatusCode(res, 400, "Missing user data.");
@@ -27,12 +22,16 @@ test("Given use case throws MissingUser error When call registerUser Then return
 //     verifyErrorHttpStatusCode(res, 400, "Name is required");
 // });
 
-test("Given use case throws UserAlreadyExists error When call registerUser Then return 400 - Bad Request", async () => {
-    const mockUseCase = new RegisterUserUseCase();
-    mockUseCase.registerUser.mockRejectedValue(new Errors.UserAlreadyExists());
-    const handler = new UserHandler(mockUseCase, null, null);
+
+test("Given duplicate user When call registerUser Then return 400 - Bad Request", async () => {
+    const mockUserRepo = new UserRepository();
+    const fred = { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" };
+    mockUserRepo.getUser.mockResolvedValue(fred);   // set up getUser() to return fred
+    const useCase = new RegisterUserUseCase(mockUserRepo);
+    const handler = new UserHandler(useCase, mockUserRepo, null);
     const res = setupResponse();
-    await handler.registerUser({ }, res);
+    const req = { body: fred };
+    await handler.registerUser(req, res);
     verifyErrorHttpStatusCode(res, 400, "User already exists.");
 });
 

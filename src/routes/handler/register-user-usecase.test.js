@@ -1,5 +1,8 @@
 const RegisterUserUseCase = require("./register-user-usecase");
 const Errors = require("./errors");
+const UserRepository = require("../../repositories/user-repository");
+jest.mock("../../repositories/user-repository");
+
 
 test("Given no user info When call registerUser Then throw MissingUser error", async () => {
     const usecase = new RegisterUserUseCase();
@@ -21,9 +24,13 @@ test("Given no user info When call registerUser Then throw MissingUser error", a
 //     };
 // });
 
-
-// // Assert helper
-// function verifyError(fn, error, msg) {
-//     expect(fn).toThrow(error);
-//     expect(fn).toThrow(msg);
-// }
+test("Given duplicate user When call registerUser Then throw UserAlreadyExists error", async () => {
+    const mockUserRepo = new UserRepository();
+    const fred = { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" };
+    mockUserRepo.getUser.mockResolvedValue(fred);   // set up getUser() to return fred
+    const useCase = new RegisterUserUseCase(mockUserRepo);
+    const errors = { isEmpty: jest.fn(() => { return true; })};
+    await expect(useCase.registerUser(fred, errors))
+        .rejects
+        .toBeInstanceOf(Errors.UserAlreadyExists);
+});
