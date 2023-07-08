@@ -23,7 +23,7 @@ test("Given no user data When call registerUser Then return 400 - Bad Request", 
 // });
 
 
-test("Given duplicate user When call registerUser Then return 400 - Bad Request", async () => {
+test("Given duplicate user When call registerUser Then return 400 - Bad Request (User already exists)", async () => {
     const mockUserRepo = new UserRepository();
     const fred = { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" };
     mockUserRepo.getUser.mockResolvedValue(fred);   // set up getUser() to return fred

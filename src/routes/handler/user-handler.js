@@ -45,19 +45,7 @@ class UserHandlers extends ApiHandler {
   async registerUser(req, res) {
     try {
 
-      await this.registerUseCase.registerUser(req.body, validationResult(req));
-
-      const { name, email, password, avatar } = req.body;
-
-      //TODO: get gravatar
-      //const avatar = gravator.url(email, { s: "200", r: "pg", d: "mm" });
-      user = new User({ name, email, avatar, password });
-
-      //encrypt password
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(password, salt);
-      
-      await user.save();
+      const user = await this.registerUseCase.registerUser(req.body, validationResult(req));
 
       //jwt token
       const payload = {

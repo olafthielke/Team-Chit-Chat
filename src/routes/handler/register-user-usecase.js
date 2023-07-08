@@ -1,4 +1,6 @@
 const Errors = require("./errors");
+const bcrypt = require("bcryptjs");
+const User = require("../../models/user");
 
 class RegisterUserUseCase {    
 
@@ -21,6 +23,18 @@ class RegisterUserUseCase {
         // TODO Encrypt password, get avatar
         
         // TODO Save user
+
+        //const avatar = gravator.url(email, { s: "200", r: "pg", d: "mm" });
+
+        //encrypt password
+        const salt = await bcrypt.genSalt(10);
+        const pwdHash = await bcrypt.hash(password, salt);
+
+        const newUser = new User({ name, email, avatar, pwdHash });
+  
+        await this.userRepository.saveUser(newUser);
+  
+        return newUser;
     }
 }
 

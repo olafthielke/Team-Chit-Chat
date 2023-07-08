@@ -33,6 +33,10 @@ class UserRepository {
   async getUser(email) {
     return await User.findOne({ email });
   }
+
+  async saveUser(user) {
+    await user.save();
+  }
 }
 
 module.exports = UserRepository;

@@ -34,3 +34,13 @@ test("Given duplicate user When call registerUser Then throw UserAlreadyExists e
         .rejects
         .toBeInstanceOf(Errors.UserAlreadyExists);
 });
+
+test("Given new user When call registerUser Then save user", async () => {
+    const mockUserRepo = new UserRepository();
+    const fred = { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" };
+    mockUserRepo.getUser.mockResolvedValue(null);   // set up getUser() to return null (i.e. not found)
+    const useCase = new RegisterUserUseCase(mockUserRepo);
+    const errors = { isEmpty: jest.fn(() => { return true; })};
+    const user = await useCase.registerUser(fred, errors);
+    expect(mockUserRepo.saveUser).toHaveBeenCalled();
+});
