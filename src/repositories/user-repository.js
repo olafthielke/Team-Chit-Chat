@@ -35,7 +35,10 @@ class UserRepository {
   }
 
   async saveUser(user) {
-    await user.save();
+    const { name, email, password, avatar } = user;
+    const newUser = new User({ name, email, avatar, password });
+    await newUser.save();
+    user.id = newUser.id;
   }
 }
 

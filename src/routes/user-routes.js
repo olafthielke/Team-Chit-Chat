@@ -3,9 +3,11 @@ const UserHandlers = require('../routes/handler/user-handler');
 const logger = require('../utils/logger');
 const { check } = require('express-validator');
 const RegisterUserUseCase = require("../routes/handler/register-user-usecase");
+const UserRepository = require("../repositories/user-repository");
 
 module.exports = (app, log) => {
-    const registerUseCase = new RegisterUserUseCase();
+    const userRepository = new UserRepository();
+    const registerUseCase = new RegisterUserUseCase(userRepository);
     const handlers = new UserHandlers(registerUseCase, log);
     logger.info(`navigating to user routes`);
     //integrate and add swagger docs
