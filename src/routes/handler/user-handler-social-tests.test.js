@@ -1,5 +1,6 @@
 const RegisterUserUseCase = require("./register-user-usecase");
 const UserHandler = require("./user-handler");
+const BCryptHasher = require("./bcrypt-hasher");
 const UserRepository = require("../../repositories/user-repository");
 jest.mock("../../repositories/user-repository");
 
@@ -35,6 +36,19 @@ test("Given duplicate user When call registerUser Then return 400 - Bad Request 
     verifyErrorHttpStatusCode(res, 400, "User already exists.");
 });
 
+test("Given new user When call registerUser Then return 200 - OK", async () => {
+    const mockUserRepo = new UserRepository();
+    const hasher = new BCryptHasher();
+    const fred = { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" };
+    mockUserRepo.getUser.mockResolvedValue(null);   // set up getUser() to return null (not found)
+    const useCase = new RegisterUserUseCase(mockUserRepo, hasher);
+    const handler = new UserHandler(useCase, mockUserRepo, null);
+    const res = setupResponse();
+    const req = { body: fred };
+    await handler.registerUser(req, res);
+    expect(res.status).toHaveBeenCalledWith(200)
+});
+
 
 // Arrange helpers
 function setupResponse()
@@ -50,4 +64,8 @@ function setupResponse()
 function verifyErrorHttpStatusCode(res, httpStatusCode, errorMsg) {
     expect(res.status).toHaveBeenCalledWith(httpStatusCode);
     expect(res.json).toHaveBeenCalledWith({ errors: [{ msg: errorMsg }] });
+}
+
+function verifySuccessHttpStatusCode(res, httpStatusCode) {
+    expect(res.status).toHaveBeenCalledWith(httpStatusCode);
 }

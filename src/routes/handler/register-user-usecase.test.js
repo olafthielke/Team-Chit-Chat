@@ -1,4 +1,6 @@
 const RegisterUserUseCase = require("./register-user-usecase");
+// const Hasher = require("./bcrypt-hasher");
+const Hasher = require("./not-hasher");
 const Errors = require("./errors");
 const UserRepository = require("../../repositories/user-repository");
 jest.mock("../../repositories/user-repository");
@@ -37,20 +39,23 @@ test("Given duplicate user When call registerUser Then throw UserAlreadyExists e
 
 test("Given new user When call registerUser Then save user", async () => {
     const mockUserRepo = new UserRepository();
+    const hasher = new Hasher();
     const fred = { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" };
     mockUserRepo.getUser.mockResolvedValue(null);   // set up getUser() to return null (i.e. not found)
-    const useCase = new RegisterUserUseCase(mockUserRepo);
+    const useCase = new RegisterUserUseCase(mockUserRepo, hasher);
     const errors = { isEmpty: jest.fn(() => { return true; })};
     const user = await useCase.registerUser(fred, errors);
     expect(mockUserRepo.saveUser).toHaveBeenCalledWith(user);
 });
 
-test("Given new user When call registerUser Then encrypt password", async () => {
+test("Given new user When call registerUser Then hash password", async () => {
     const mockUserRepo = new UserRepository();
+    const hasher = new Hasher();
     const fred = { name: "Fred Flintstone", email: "fred@flintstones.net", password: "password1" };
     mockUserRepo.getUser.mockResolvedValue(null);   // set up getUser() to return null (i.e. not found)
-    const useCase = new RegisterUserUseCase(mockUserRepo);
+    const useCase = new RegisterUserUseCase(mockUserRepo, hasher);
     const errors = { isEmpty: jest.fn(() => { return true; })};
     const user = await useCase.registerUser(fred, errors);
     expect(user.password).not.toBe("password1");
 });
+

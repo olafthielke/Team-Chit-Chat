@@ -1,10 +1,10 @@
 const Errors = require("./errors");
-const bcrypt = require("bcryptjs");
 
 class RegisterUserUseCase {    
 
-    constructor(userRepository) {
+    constructor(userRepository, hasher) {
         this.userRepository = userRepository;
+        this.hasher = hasher;
       }
     
     async registerUser(user, errors) {
@@ -28,8 +28,7 @@ class RegisterUserUseCase {
     }
     
     async hash(input) {
-        const salt = await bcrypt.genSalt(10);
-        return await bcrypt.hash(input, salt);
+        return this.hasher.hash(input);
     }
 }
 

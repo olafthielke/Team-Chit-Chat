@@ -64,6 +64,7 @@ class UserHandlers extends ApiHandler {
           res.json({ token });
         }
       );
+      res.status(200);
     } catch (err) {
       if (err instanceof Errors.MissingUser) {
         res.status(400).json({ errors: [{ msg: err.message }] });
