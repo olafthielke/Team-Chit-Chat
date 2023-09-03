@@ -3,14 +3,14 @@ const Errors = require("./errors");
 class RegisterUserUseCase {    
 
     constructor(userRepository, hasher) {
-        this.userRepository = userRepository;
+        this.userRepo = userRepository;
         this.hasher = hasher;
       }
     
     async registerUser(user, errors) {
         await this.validate(user, errors);
         user.password = await this.hash(user.password);
-        await this.userRepository.saveUser(user);
+        await this.userRepo.saveUser(user);
         return user;
     }
 
@@ -22,7 +22,7 @@ class RegisterUserUseCase {
             throw new Errors.ValidationError(errors.array());
 
         //validate if user exists
-        const existUser = await this.userRepository.getUser(user.email);
+        const existUser = await this.userRepo.getUser(user.email);
         if (existUser)
             throw new Errors.UserAlreadyExists(user.email);
     }
